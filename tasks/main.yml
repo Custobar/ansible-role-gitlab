@@ -17,11 +17,13 @@
     - openssh-server
     - postfix
     - curl
+    - openssl
 
 - name: Download GitLab repository installation script.
   get_url:
     url: "{{ gitlab_repository_installation_script_url }}"
     dest: /tmp/gitlab_install_repository.sh
+    validate_certs: "{{ gitlab_download_validate_certs }}"
   when: (gitlab_file.stat.exists == false)
 
 - name: Install GitLab repository
@@ -29,7 +31,7 @@
   when: (gitlab_file.stat.exists == false)
 
 - name: Install GitLab
-  package: name=gitlab-ce state=installed
+  package: name={{ gitlab_edition }} state=installed
   when: (gitlab_file.stat.exists == false)
 
 # Start and configure GitLab. Sometimes the first run fails, but after that,

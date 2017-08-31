@@ -23,7 +23,15 @@ The URL at which the GitLab instance will be accessible. This is set as the `ext
 
     gitlab_git_data_dir: "/var/opt/gitlab/git-data"
 
-The `gitlab_git_data_url` is the location where all the Git repositories will be stored. You can use a shared drive or any path on the system.
+The `gitlab_git_data_dir` is the location where all the Git repositories will be stored. You can use a shared drive or any path on the system.
+
+    gitlab_backup_path: "/var/opt/gitlab/backups"
+
+The `gitlab_backup_path` is the location where Gitlab backups will be stored.
+
+    gitlab_edition: "gitlab-ce"
+
+The edition of GitLab to install. Usually either `gitlab-ce` (Community Edition) or `gitlab-ee` (Enterprise Edition).
 
     # SSL Configuration.
     gitlab_redirect_http_to_https: "true"
@@ -33,7 +41,7 @@ The `gitlab_git_data_url` is the location where all the Git repositories will be
 GitLab SSL configuration; tells GitLab to redirect normal http requests to https, and the path to the certificate and key (the default values will work for automatic self-signed certificate creation, if set to `true` in the variable below).
 
     # SSL Self-signed Certificate Configuration.
-    gitlab_create_self_signed_cert: true
+    gitlab_create_self_signed_cert: "true"
     gitlab_self_signed_cert_subj: "/C=US/ST=Missouri/L=Saint Louis/O=IT/CN=gitlab"
 
 Whether to create a self-signed certificate for serving GitLab over a secure connection. Set `gitlab_self_signed_cert_subj` according to your locality and organization.
@@ -58,26 +66,46 @@ Gitlab timezone.
 
 How long to keep local backups (useful if you don't want backups to fill up your drive!).
 
+    gitlab_download_validate_certs: yes
+
+Controls whether to validate certificates when downloading the GitLab installation repository install script.
+
     # Email configuration.
-    gitlab_email_enabled: false
-    gitlab_email_from: 'gitlab@example.com'
-    gitlab_email_display_name: 'Gitlab'
-    gitlab_email_reply_to: 'gitlab@example.com'
+    gitlab_email_enabled: "false"
+    gitlab_email_from: "gitlab@example.com"
+    gitlab_email_display_name: "Gitlab"
+    gitlab_email_reply_to: "gitlab@example.com"
 
 Gitlab system mail configuration. Disabled by default; set `gitlab_email_enabled` to `true` to enable, and make sure you enter valid from/reply-to values.
+
+    # SMTP Configuration
+    gitlab_smtp_enable: "false"
+    gitlab_smtp_address: "smtp.server"
+    gitlab_smtp_port: "465"
+    gitlab_smtp_user_name: "smtp user"
+    gitlab_smtp_password: "smtp password"
+    gitlab_smtp_domain: "example.com"
+    gitlab_smtp_authentication: "login"
+    gitlab_smtp_enable_starttls_auto: "true"
+    gitlab_smtp_tls: "false"
+    gitlab_smtp_openssl_verify_mode: "none"
+    gitlab_smtp_ca_path: "/etc/ssl/certs"
+    gitlab_smtp_ca_file: "/etc/ssl/certs/ca-certificates.crt"
+
+Gitlab SMTP configuration; of `gitlab_smtp_enable` is `true`, the rest of the configuration will tell GitLab how to send mails using an smtp server.
 
     gitlab_nginx_listen_port: 8080
 
 If you are running GitLab behind a reverse proxy, you may want to override the listen port to something else.
 
-    gitlab_nginx_listen_https: false
+    gitlab_nginx_listen_https: "false"
 
 If you are running GitLab behind a reverse proxy, you may wish to terminate SSL at another proxy server or load balancer
 
-    gitlab_nginx_ssl_client_certificate: "/etc/gitlab/ssl/client.crt"
-    gitlab_nginx_ssl_verify_client: "on"
+    gitlab_nginx_ssl_verify_client: ""
+    gitlab_nginx_ssl_client_certificate: ""
 
-Client certificate configuration: tells GitLab to use client certificate.
+If you want to enable [2-way SSL Client Authentication](https://docs.gitlab.com/omnibus/settings/nginx.html#enable-2-way-ssl-client-authentication), set `gitlab_nginx_ssl_verify_client` and add a path to the client certificate in `gitlab_nginx_ssl_client_certificate`.
 
 ## Dependencies
 
